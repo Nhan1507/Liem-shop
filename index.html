@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liêm Shop - Tra cứu đơn</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="logo">
+        <h1>LIÊM SHOP</h1>
+        <p>Genshin Impact • Honkai: Star Rail</p>
+    </div>
+
+    <div class="search-box">
+
+        <h2>Tra cứu đơn hàng</h2>
+
+        <input
+            type="text"
+            id="orderInput"
+            placeholder="Nhập mã đơn (VD: OPK728)"
+        >
+
+        <button onclick="searchOrder()">
+            Tra cứu
+        </button>
+
+    </div>
+
+    <div id="result" class="result">
+
+        <h3>Thông tin đơn hàng</h3>
+
+        <p><strong>Mã đơn:</strong> OPK728</p>
+
+        <p><strong>Game:</strong> Genshin Impact</p>
+
+        <p><strong>Trạng thái:</strong>
+            <span class="working">
+                🟢 Đang cày
+            </span>
+        </p>
+
+        <p><strong>Tiến độ:</strong></p>
+
+        <div class="progress">
+
+            <div class="progress-bar">
+
+            </div>
+
+        </div>
+
+        <p>82%</p>
+
+        <p>
+            <strong>Máy:</strong>
+            OPPO K13 Turbo
+        </p>
+
+        <p>
+            <strong>Ghi chú:</strong>
+            Đang farm Fontaine.
+        </p>
+
+        <p>
+            <strong>Cập nhật:</strong>
+            20/07/2026 03:30
+        </p>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
