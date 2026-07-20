@@ -1,53 +1,48 @@
 console.log("Liem Shop đang hoạt động!");
-// Firebase SDK
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import {
-  getFirestore,
-  doc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { db } from "./firebase.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-// Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyCoiPdzArqR2PscxSFAd5GUO06EonxUHkY",
-  authDomain: "liem-shop.firebaseapp.com",
-  projectId: "liem-shop",
-  storageBucket: "liem-shop.firebasestorage.app",
-  messagingSenderId: "1094971501135",
-  appId: "1:1094971501135:web:5d53f770adca06cd16583a",
-  measurementId: "G-J3YNQKWYRE"
-};
-
-// Khởi tạo Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Hàm tra cứu đơn
 window.searchOrder = async function () {
-  const code = document.getElementById("orderCode").value.trim();
+    const code = document.getElementById("orderCode").value.trim().toUpperCase();
 
-  if (!code) {
-    alert("Nhập mã đơn!");
-    return;
-  }
+    if (!code) {
+        alert("Vui lòng nhập mã đơn!");
+        return;
+    }
 
-  const ref = doc(db, "orders", code);
-  const snap = await getDoc(ref);
+    const docRef = doc(db, "orders", code);
+    const docSnap = await getDoc(docRef);
 
-  if (!snap.exists()) {
-    alert("Không tìm thấy đơn!");
-    return;
-  }
+    const result = document.getElementById("result");
 
-  const data = snap.data();
+    if (!docSnap.exists()) {
+        result.innerHTML = `
+            <h3>Không tìm thấy đơn hàng</h3>
+        `;
+        return;
+    }
 
-  document.getElementById("result").innerHTML = `
-    <h3>Mã đơn: ${data.code}</h3>
-    <p>Game: ${data.game}</p>
-    <p>Trạng thái: ${data.status}</p>
-    <p>Tiến độ: ${data.progress}%</p>
-    <p>Thiết bị: ${data.Device}</p>
-    <p>Ghi chú: ${data.note}</p>
-    <p>Cập nhật: ${data.updated}</p>
-  `;
-}
+    const data = docSnap.data();
+
+    result.innerHTML = `
+        <h3>Thông tin đơn hàng</h3>
+
+        <p><strong>Mã đơn:</strong> ${data.code}</p>
+
+        <p><strong>Game:</strong> ${data.game}</p>
+
+        <p><strong>Trạng thái:</strong> ${data.status}</p>
+
+        <p><strong>Tiến độ:</strong> ${data.Progress}%</p>
+
+        <div class="progress">
+            <div class="progress-bar" style="width:${data.Progress}%"></div>
+        </div>
+
+        <p><strong>Thiết bị:</strong> ${data.Device}</p>
+
+        <p><strong>Ghi chú:</strong> ${data.note}</p>
+
+        <p><strong>Cập nhật:</strong> ${data.updated}</p>
+    `;
+};
