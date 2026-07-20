@@ -1,73 +1,53 @@
-// Dữ liệu mẫu (sau này sẽ lấy từ Firebase)
+console.log("Liem Shop đang hoạt động!");
+// Firebase SDK
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import {
+  getFirestore,
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-const orders = {
-    "OPK728": {
-        game: "Genshin Impact",
-        status: "🟢 Đang cày",
-        progress: 82,
-        device: "OPPO K13 Turbo",
-        note: "Đang farm Fontaine.",
-        update: "20/07/2026 03:30"
-    },
-
-    "LPR531": {
-        game: "Honkai: Star Rail",
-        status: "⏸️ Tạm dừng",
-        progress: 45,
-        device: "Lenovo Pad Pro GT",
-        note: "Đợi reset stamina.",
-        update: "20/07/2026 02:10"
-    }
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyCoiPdzArqR2PscxSFAd5GUO06EonxUHkY",
+  authDomain: "liem-shop.firebaseapp.com",
+  projectId: "liem-shop",
+  storageBucket: "liem-shop.firebasestorage.app",
+  messagingSenderId: "1094971501135",
+  appId: "1:1094971501135:web:5d53f770adca06cd16583a",
+  measurementId: "G-J3YNQKWYRE"
 };
 
-function searchOrder() {
+// Khởi tạo Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-    const code = document
-        .getElementById("orderInput")
-        .value
-        .toUpperCase()
-        .trim();
+// Hàm tra cứu đơn
+window.searchOrder = async function () {
+  const code = document.getElementById("orderCode").value.trim();
 
-    if(code === ""){
-        alert("Vui lòng nhập mã đơn!");
-        return;
-    }
+  if (!code) {
+    alert("Nhập mã đơn!");
+    return;
+  }
 
-    if(orders[code]){
+  const ref = doc(db, "orders", code);
+  const snap = await getDoc(ref);
 
-        const order = orders[code];
+  if (!snap.exists()) {
+    alert("Không tìm thấy đơn!");
+    return;
+  }
 
-        document.getElementById("result").innerHTML = `
-            <h3>Thông tin đơn hàng</h3>
+  const data = snap.data();
 
-            <p><strong>Mã đơn:</strong> ${code}</p>
-
-            <p><strong>Game:</strong> ${order.game}</p>
-
-            <p><strong>Trạng thái:</strong> ${order.status}</p>
-
-            <p><strong>Tiến độ:</strong></p>
-
-            <div class="progress">
-                <div class="progress-bar" style="width:${order.progress}%"></div>
-            </div>
-
-            <p>${order.progress}%</p>
-
-            <p><strong>Máy:</strong> ${order.device}</p>
-
-            <p><strong>Ghi chú:</strong> ${order.note}</p>
-
-            <p><strong>Cập nhật:</strong> ${order.update}</p>
-        `;
-
-    }else{
-
-        document.getElementById("result").innerHTML = `
-            <h3>❌ Không tìm thấy đơn</h3>
-            <p>Vui lòng kiểm tra lại mã đơn.</p>
-        `;
-
-    }
-
+  document.getElementById("result").innerHTML = `
+    <h3>Mã đơn: ${data.code}</h3>
+    <p>Game: ${data.game}</p>
+    <p>Trạng thái: ${data.status}</p>
+    <p>Tiến độ: ${data.progress}%</p>
+    <p>Thiết bị: ${data.Device}</p>
+    <p>Ghi chú: ${data.note}</p>
+    <p>Cập nhật: ${data.updated}</p>
+  `;
 }
